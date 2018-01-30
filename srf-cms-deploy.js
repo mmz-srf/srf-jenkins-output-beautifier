@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         New Userscript
+// @name         Deployment-Beautifier
 // @namespace    http://tampermonkey.net/
 // @version      0.1
-// @description  try to take over the world!
-// @author       You
+// @description  Make CMS Deployments easily searchable
+// @author       SRFCMS
 // @match        https://cms-ci-1.zrh.test.srf.mpc/job/cms-deployment-*/*/console*
 // @grant        none
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
@@ -40,6 +40,7 @@
         };
 
         let collectInterestingSpans = () => {
+            // Add more criteria here
             $('span[style*="color: #CD0000"]').addClass("srf-interesting-span");
         };
 
@@ -108,7 +109,7 @@
                 display: inline-block;
             }
             .srf-btn {
-                z-index: 100;
+                z-index: 1000;
                 position: fixed;
                 top: 80px;
                 right: 100px;
