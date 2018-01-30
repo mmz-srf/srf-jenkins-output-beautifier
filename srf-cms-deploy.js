@@ -13,7 +13,7 @@
     $(() => {
         const ACTIVE_CLASS = "srf-interesting-span--marked";
 
-        let button = $('<button>Help me!</button>');
+        let button = $('<button class="srf-btn srf-btn--init">Help me!</button>');
         $('.build-caption.page-headline').append(button);
 
         button.on('click', () => {
@@ -28,37 +28,15 @@
         let createJumpButtons = () => {
             let $prevBtn = $('<button class="srf-btn srf-btn--prev">Previous</button>');
             let $nextBtn = $('<button class="srf-btn srf-btn--next">Next</button>');
+            let $topBtn = $('<button class="srf-btn srf-btn--top">Jump to top</button>');
+            let $bottomBtn = $('<button class="srf-btn srf-btn--bottom">Jump to bottom</button>');
 
-            $prevBtn.on("click", () => {
-                let $markedSpan = $(`.${ACTIVE_CLASS}`);
+            $prevBtn.on("click", onPrevClick);
+            $nextBtn.on("click", onNextClick);
+            $topBtn.on("click", onTopClick);
+            $bottomBtn.on("click", onBottomClick);
 
-                if ($markedSpan.length === 0) {
-                    markInterestingSpan($(".srf-interesting-span").last());
-                } else {
-                    let $prevElem = $markedSpan.prev(".srf-interesting-span");
-                    if ($prevElem) {
-                        markInterestingSpan($prevElem);
-                        $markedSpan.removeClass(ACTIVE_CLASS);
-                    }
-                }
-            });
-
-            $nextBtn.on("click", () => {
-                let $markedSpan = $(`.${ACTIVE_CLASS}`);
-
-                if ($markedSpan.length === 0) {
-                    markInterestingSpan($(".srf-interesting-span").first());
-                } else {
-                    let $nextElem = $markedSpan.next(".srf-interesting-span");
-                    if ($nextElem) {
-                        markInterestingSpan($nextElem);
-                        $markedSpan.removeClass(ACTIVE_CLASS);
-                    }
-                }
-            });
-
-            $('body').append($prevBtn);
-            $('body').append($nextBtn);
+            $('body').append($prevBtn, $nextBtn, $topBtn, $bottomBtn);
         };
 
         let collectInterestingSpans = () => {
@@ -74,7 +52,41 @@
             }, 1000);
         };
 
+        let onPrevClick = () => {
+            let $markedSpan = $(`.${ACTIVE_CLASS}`);
 
+            if ($markedSpan.length === 0) {
+                markInterestingSpan($(".srf-interesting-span").last());
+            } else {
+                let $prevElem = $markedSpan.prevAll(".srf-interesting-span").first();
+                if ($prevElem.length > 0) {
+                    markInterestingSpan($prevElem);
+                    $markedSpan.removeClass(ACTIVE_CLASS);
+                }
+            }
+        };
+
+        let onNextClick = () => {
+            let $markedSpan = $(`.${ACTIVE_CLASS}`);
+
+            if ($markedSpan.length === 0) {
+                markInterestingSpan($(".srf-interesting-span").first());
+            } else {
+                let $nextElem = $markedSpan.nextAll(".srf-interesting-span").first();
+                if ($nextElem.length > 0) {
+                    markInterestingSpan($nextElem);
+                    $markedSpan.removeClass(ACTIVE_CLASS);
+                }
+            }
+        };
+
+        let onTopClick = () => {
+            $("html, body").animate({ scrollTop: 0 }, 500);
+        };
+
+        let onBottomClick = () => {
+            $("html, body").animate({ scrollTop: $(document).height() }, 500);
+        };
 
 
 
@@ -96,14 +108,24 @@
                 display: inline-block;
             }
             .srf-btn {
+                z-index: 100;
                 position: fixed;
-                top: 40px;
+                top: 80px;
                 right: 100px;
                 padding: 8px 16px;
             }
-            
             .srf-btn--prev {
                 right: 180px;
+            }
+            .srf-btn--init {
+                position: initial;
+                margin-left: 24px;
+            }
+            .srf-btn--top {
+                top: 40px;
+            }
+            .srf-btn--bottom {
+                top: 120px;
             }
             `
         );
