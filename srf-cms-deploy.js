@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Jenkins-Deployment-Beautifier
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.3
 // @description  Make CMS Deployments easily searchable
 // @author       SRFCMS
 // @match        */job/cms-deployment-*/*/console*
@@ -12,18 +12,21 @@
 (() => {
     $(() => {
         const ACTIVE_CLASS = "srf-interesting-span--marked";
+        const INTERESTING_CLASS = "srf-interesting-span";
 
-        let button = $('<button class="srf-btn srf-btn--init">Help me!</button>');
-        $('.build-caption.page-headline').append(button);
+        let $button = $('<button class="srf-btn srf-btn--init">Help me!</button>');
+        $('.build-caption.page-headline').append($button);
 
-        button.on('click', () => {
+        $button.on('click', () => {
             let consoleContent = $('.console-output').html();
 
             collectInterestingSpans();
             createJumpButtons();
-        });
 
-        let redSpans = $('span[style*="color: #CD0000"]');
+            markInterestingSpan($(`.${INTERESTING_CLASS}`).first());
+
+            $button.remove();
+        });
 
         let createJumpButtons = () => {
             let $prevBtn = $('<button class="srf-btn srf-btn--prev">Previous</button>');
@@ -41,25 +44,23 @@
 
         let collectInterestingSpans = () => {
             // Add more criteria here
-            $('span[style*="color: #CD0000"]').addClass("srf-interesting-span");
+            $('span[style*="color: #CD0000"]').addClass(INTERESTING_CLASS);
         };
 
         let markInterestingSpan = ($span) => {
             $span.addClass(ACTIVE_CLASS);
             $span.focus();
 
-            $('html, body').animate({
-                scrollTop: $span.offset().top
-            }, 1000);
+            scrollTo($span.offset().top);
         };
 
         let onPrevClick = () => {
             let $markedSpan = $(`.${ACTIVE_CLASS}`);
 
             if ($markedSpan.length === 0) {
-                markInterestingSpan($(".srf-interesting-span").last());
+                markInterestingSpan($(`.${INTERESTING_CLASS}`).last());
             } else {
-                let $prevElem = $markedSpan.prevAll(".srf-interesting-span").first();
+                let $prevElem = $markedSpan.prevAll(`.${INTERESTING_CLASS}`).first();
                 if ($prevElem.length > 0) {
                     markInterestingSpan($prevElem);
                     $markedSpan.removeClass(ACTIVE_CLASS);
@@ -71,9 +72,9 @@
             let $markedSpan = $(`.${ACTIVE_CLASS}`);
 
             if ($markedSpan.length === 0) {
-                markInterestingSpan($(".srf-interesting-span").first());
+                markInterestingSpan($(`.${INTERESTING_CLASS}`).first());
             } else {
-                let $nextElem = $markedSpan.nextAll(".srf-interesting-span").first();
+                let $nextElem = $markedSpan.nextAll(`.${INTERESTING_CLASS}`).first();
                 if ($nextElem.length > 0) {
                     markInterestingSpan($nextElem);
                     $markedSpan.removeClass(ACTIVE_CLASS);
@@ -82,14 +83,16 @@
         };
 
         let onTopClick = () => {
-            $("html, body").animate({ scrollTop: 0 }, 500);
+            scrollTo(0);
         };
 
         let onBottomClick = () => {
-            $("html, body").animate({ scrollTop: $(document).height() }, 500);
+            scrollTo($(document).height());
         };
 
-
+        let scrollTo = (targetHeight) => {
+            $("html, body").stop(true, true).animate({ scrollTop: targetHeight }, 500);
+        };
 
         let addCss = (cssString) => {
             var head = document.getElementsByTagName('head')[0];
@@ -103,7 +106,7 @@
 
         addCss (
             `
-            .srf-interesting-span--marked {
+            .${ACTIVE_CLASS} {
                 border: 1px solid red;
                 padding: 3px;
                 display: inline-block;
