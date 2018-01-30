@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Jenkins-Deployment-Beautifier
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.3
 // @description  Make CMS Deployments easily searchable
 // @author       SRFCMS
 // @match        */job/cms-deployment-*/*/console*
