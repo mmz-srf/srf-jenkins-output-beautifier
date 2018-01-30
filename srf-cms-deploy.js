@@ -4,7 +4,7 @@
 // @version      0.1
 // @description  Make CMS Deployments easily searchable
 // @author       SRFCMS
-// @match        https://cms-ci-1.zrh.test.srf.mpc/job/cms-deployment-*/*/console*
+// @match        */job/cms-deployment-*/*/console*
 // @grant        none
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
 // ==/UserScript==
