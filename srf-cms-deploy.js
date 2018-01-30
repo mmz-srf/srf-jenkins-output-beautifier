@@ -93,6 +93,7 @@
             .srf-interesting-span--marked {
                 border: 1px solid red;
                 padding: 3px;
+                display: inline-block;
             }
             .srf-btn {
                 position: fixed;
