@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Jenkins-Deployment-Beautifier
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.4
 // @description  Make CMS Deployments easily searchable
 // @author       SRFCMS
 // @match        */job/cms-deployment-*/*/console*
@@ -15,7 +15,10 @@
         const INTERESTING_CLASS = "srf-interesting-span";
 
         let $button = $('<button class="srf-btn srf-btn--init">Help me!</button>');
-        $('.build-caption.page-headline').append($button);
+
+        if ($(".build-caption.page-headline img").attr("alt") === "Failed") {
+            $('.build-caption.page-headline').append($button);
+        }
 
         $button.on('click', () => {
             let consoleContent = $('.console-output').html();
