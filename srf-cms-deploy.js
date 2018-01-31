@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Jenkins-Deployment-Beautifier
 // @namespace    http://tampermonkey.net/
-// @version      0.5
+// @version      0.6
 // @description  Make CMS Deployments easily searchable
 // @author       SRFCMS
 // @match        */job/cms-deployment-*/*/console*
@@ -62,8 +62,8 @@
 
             $(".srf-span--collapsable").on("click", (event) => {
                 $(event.target).toggleClass("srf-span--collapsed");
-            })
-        }
+            });
+        };
 
         let markInterestingSpan = ($span) => {
             $span.addClass(ACTIVE_CLASS);
@@ -73,6 +73,7 @@
         };
 
         let onHideStuffClick = () => {
+            $(".srf-btn--hide-stuff").hide();
             collectBoringSpans();
         };
 
