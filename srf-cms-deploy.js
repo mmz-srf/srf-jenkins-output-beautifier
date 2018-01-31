@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Jenkins-Deployment-Beautifier
 // @namespace    http://tampermonkey.net/
-// @version      0.4
+// @version      0.5
 // @description  Make CMS Deployments easily searchable
 // @author       SRFCMS
 // @match        */job/cms-deployment-*/*/console*
@@ -37,12 +37,15 @@
             let $topBtn = $('<button class="srf-btn srf-btn--top">Jump to top</button>');
             let $bottomBtn = $('<button class="srf-btn srf-btn--bottom">Jump to bottom</button>');
 
+            let $hideStuffBtn = $('<button class="srf-btn srf-btn--hide-stuff">Hide Stuff</button>');
+
             $prevBtn.on("click", onPrevClick);
             $nextBtn.on("click", onNextClick);
             $topBtn.on("click", onTopClick);
             $bottomBtn.on("click", onBottomClick);
+            $hideStuffBtn.on("click", onHideStuffClick);
 
-            $('body').append($prevBtn, $nextBtn, $topBtn, $bottomBtn);
+            $('body').append($prevBtn, $nextBtn, $topBtn, $bottomBtn, $hideStuffBtn);
         };
 
         let collectInterestingSpans = () => {
@@ -50,11 +53,27 @@
             $('span[style*="color: #CD0000"]').addClass(INTERESTING_CLASS);
         };
 
+        let collectBoringSpans = () => {
+            $(".console-output span").not(`.${INTERESTING_CLASS}`).each((i, elem) => {
+                if ($(elem).height() > 20) {
+                    $(elem).addClass("srf-span--collapsable srf-span--collapsed");
+                }
+            });
+
+            $(".srf-span--collapsable").on("click", (event) => {
+                $(event.target).toggleClass("srf-span--collapsed");
+            })
+        }
+
         let markInterestingSpan = ($span) => {
             $span.addClass(ACTIVE_CLASS);
             $span.focus();
 
             scrollTo($span.offset().top);
+        };
+
+        let onHideStuffClick = () => {
+            collectBoringSpans();
         };
 
         let onPrevClick = () => {
@@ -133,6 +152,32 @@
             }
             .srf-btn--bottom {
                 top: 120px;
+            }
+            .srf-span--collapsable {
+                position: relative;
+                display: block;
+                padding-left: 20px;
+                margin-left: -20px;
+            }
+            .srf-span--collapsed {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 768px;
+            }
+            .srf-span--collapsable:before {
+                content: "-";
+                position: absolute;
+                left: 0px;
+                font-size: 24px;
+                color: black;
+            }
+            .srf-span--collapsed:before {
+                content: "+";
+            }
+            .srf-btn--hide-stuff {
+                bottom: 20px;
+                top: auto;
             }
             `
         );
