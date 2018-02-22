@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Jenkins-Deployment-Beautifier
 // @namespace    http://tampermonkey.net/
-// @version      0.6
+// @version      0.7
 // @description  Make CMS Deployments easily searchable
 // @author       SRFCMS
 // @match        */job/cms-deployment-*/*/console*
@@ -16,7 +16,7 @@
 
         let $button = $('<button class="srf-btn srf-btn--init">Help me!</button>');
 
-        if ($(".build-caption.page-headline img").attr("alt") === "Failed") {
+        if ( $(".build-caption.page-headline img").hasClass("icon-red")) {
             $('.build-caption.page-headline').append($button);
         }
 
